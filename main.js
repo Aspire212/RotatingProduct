@@ -41,9 +41,9 @@ class RotatingProduct {
             end: 'mouseup',
             over: 'mouseenter',
             leave: 'mouseleave',
-            beginX: 0,
-            runX: 0,
-            endX: 0,
+            beginX: 0, // значение х при событии mousedown
+            runX: 0, // значение х при событии mousemove
+            endI: 0, // значение this при событии mouseup
         }; // объект содержащий названия событий и переменные для этих событий
 
         //изменяем первый элемент массива и загружаем его
@@ -57,7 +57,7 @@ class RotatingProduct {
             this.event.begin = 'touchstart';
             this.event.run = 'touchmove';
             this.event.end = 'touchend';
-        }
+        };
 
         this.shadow.addEventListener('click', () => {
             this.shadow.children[0].classList.add('rotate-active');
@@ -73,13 +73,12 @@ class RotatingProduct {
 
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
-            this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX;
+            this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             if (this.isRotate) {
-                window.addEventListener(this.event.run, this.moveIt);
+                window.addEventListener(this.event.run, this.imageReplacement);
                 window.addEventListener(this.event.end, (e) => {
-                    this.event.endX = this.i;
-                    console.log('endx', this.event.endX)
-                    window.removeEventListener(this.event.run, this.moveIt);
+                    this.event.endI = this.i; // получаю последний индекс картинки
+                    window.removeEventListener(this.event.run, this.imageReplacement);
                 });
             }
 
@@ -92,76 +91,62 @@ class RotatingProduct {
             });
         });
 
-    }
-
+    };
+    //метод отрисовки
     draw(img) {
-        this.ctx.drawImage(img, this.bx, this.by, this.cvs.width, this.cvs.height);
-    }
-
+            this.ctx.drawImage(img, this.bx, this.by, this.cvs.width, this.cvs.height);
+        }
+        //метод очистки холста
     clear() {
         this.ctx.clearRect(this.bx, this.by, this.cvs.width, this.cvs.height);
-    }
+    };
 
-    downloadImage(imgData, amountMutation) {
+    /*
+    загрузка картинок по определенному количеству
+    */
+    downloadImage(imgData, amountMutation) { // amountMutation колличество элементов
         for (let i = 0; i < amountMutation; i++) {
-            let img = new Image();
-            if (typeof imgData[i] === 'string') {
-                img.src = imgData[i];
-                imgData[i] = img;
+            let img = new Image(); // создаю картинку
+            if (typeof imgData[i] === 'string') { //проверяю элементы на строку
+                img.src = imgData[i]; // добавляю путь к картинке
+                imgData[i] = img; // заменяю строку с путем к картинке в массиве на картинку
             }
         }
         console.log(imgData);
-    }
+    };
 
     /*делаю стрелочную ф-цию чтобы не терялся this*/
-
     downloadAllImage = () => {
-        //показать прелоадер
-        this.downloadImage(this.srcData, this.srcData.length)
+        this.downloadImage(this.srcData, this.srcData.length) // вместо метода "мар" использую метод загрузки первой картинки
         this.srcData.every(el => {
-            if (el instanceof Object) {
-                this.cvs.removeEventListener('mouseenter', this.downloadAllImage);
-                this.isRotate = true;
+            if (el instanceof Object) { // если все элементы массива стали объектами
+                this.isRotate = true; //разрешаю вращение
                 console.log(this.isRotate)
             }
         })
-    }
-
-    moveIt = (e) => {
-        this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX);
-        let pageX = Math.floor(this.event.runX / (1000 / 60));
-        this.i = this.interval(pageX, this.srcData.length, this.event.endX);
+    };
+    //метод вращения 
+    imageReplacement = (e) => {
+        this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
+        let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
+        this.i = this.interval(pageX, this.srcData.length, this.event.endI); //получаю индексе картинки
         if (this.i > 0) {
-            this.draw(this.srcData[this.srcData.length - this.i])
+            this.draw(this.srcData[this.srcData.length - this.i]) //исходя из условия отрисовываю
         } else if (this.i <= 0) {
-            this.draw(this.srcData[Math.abs(this.i)])
+            this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
         }
-    }
+    };
 
-    interval(coord, length, endX) {
-        let int = Math.floor(coord / length);
-        let newX = coord - (int * length);
-        newX += endX;
-        int = Math.floor(newX / length);
-        newX = newX - (int * length);
-        console.log(newX);
+    //метод расчета интервалов
+    interval(coord, length, endI) {
+        let int = Math.floor(coord / length); // получаю интервал исходя и координат / количество картинок в массиве
+        let newX = coord - (int * length); // нахожу конркретное значение в интервале
+        newX += endI; // добавляю предыдущее значение
+        int = Math.floor(newX / length); // получаю интервал исходя старое + новое значение / количество картинок в массиве
+        newX = newX - (int * length); // нахожу конркретное значение в интервале
         //console.log('coord:', coord, 'length:', length, 'i:', i, 'newX:', newX)
         return newX;
-    }
-
-    ///тестовые
-
-    fill(color) {
-        this.ctx.fillStyle = color;
-        this.ctx.fillRect(this.bx, this.by, this.cvs.width, this.cvs.height);
-    }
-
-    spin(rangeData) {
-            let val = +rangeData.value;
-            let max = +rangeData.max;
-            return val = val < 0 ? max + val : val;
-        }
-        ///тестовые
+    };
 }
 
 
@@ -175,6 +160,7 @@ let b = new RotatingProduct('cvs', srcData)
     1.Добавить endX чтобы не сбивались координаты - Complete
     2. разобраться с Sibling
     3. Разобраться с анимацией
-    4. добавить событие колесикаб, если мышь находиться на канвасе
+    4. добавить событие колесика, если мышь находиться на канвасе
     5. убрать интервал в событии
+    6. добавить второй cvs-active с теми же стилями но зависящий от драг событий
 */
