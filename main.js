@@ -26,28 +26,24 @@ let srcData = [
 
 
 class RotatingProduct {
-    constructor(cvsID, cvsWidth, cvsHeight, srcImages) {
-        /*тестовые*/
-        
-        /*тестовые*/
+    constructor(cvsID, srcImages) {
         this.cvs = document.getElementById(cvsID); // канвас
-        
-        this.sibling = this.cvs.nextElementSibling
-        
-        this.cvs.width = cvsWidth; // ширина канваса
-        this.cvs.height = cvsHeight; // высота канваса
+        this.shadow = this.cvs.nextElementSibling; // абсолютный сосед
         this.ctx = this.cvs.getContext('2d'); // контекст
         this.srcData = srcImages; //массив путей
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
-        this.rotate = false; //возможность вращения
-        this.img = 0 // номер каринки
+        this.isRotate = false; //возможность вращения
+        this.i = 0 // номер каринки
         this.event = {
             begin: 'mousedown',
             run: 'mousemove',
             end: 'mouseup',
+            over: 'mouseenter',
+            leave: 'mouseleave',
             beginX: 0,
             runX: 0,
+            endX: 0,
         }; // объект содержащий названия событий и переменные для этих событий
 
         //изменяем первый элемент массива и загружаем его
@@ -62,38 +58,39 @@ class RotatingProduct {
             this.event.run = 'touchmove';
             this.event.end = 'touchend';
         }
-        
-        
-    
-        this.sibling.addEventListener('click', () => {
-        this.sibling.children[0].classList.add('rotate-active');
-          
-          this.downloadAllImage();
-          if (this.rotate) {
-            //стилизовать
-            this.cvs.nextElementSibling.children[0].remove('rotate-active');
-            this.cvs.nextElementSibling.style.height = 0
-            
-          }
-        })
-        
-        
-        
-        
+
+        this.shadow.addEventListener('click', () => {
+            this.shadow.children[0].classList.add('rotate-active');
+            this.downloadAllImage();
+            if (this.isRotate) {
+                //стилизовать
+                setTimeout(() => {
+                    this.shadow.children[0].remove('rotate-active');
+                    this.shadow.style.height = 0
+                }, 500)
+            }
+        });
 
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX;
-            if (this.rotate) {
+            if (this.isRotate) {
                 window.addEventListener(this.event.run, this.moveIt);
                 window.addEventListener(this.event.end, (e) => {
+                    this.event.endX = this.i;
+                    console.log('endx', this.event.endX)
                     window.removeEventListener(this.event.run, this.moveIt);
                 });
             }
 
         });
-        // по наведению на канвас загружаю все картинки
-        //this.cvs.addEventListener('mouseenter', this.downloadAllImage);
+        // почва для вращения колесом
+        this.cvs.addEventListener(this.event.over, () => {
+            this.cvs.classList.add('cvs-active');
+            this.cvs.addEventListener(this.event.leave, () => {
+                this.cvs.classList.remove('cvs-active');
+            });
+        });
 
     }
 
@@ -113,7 +110,7 @@ class RotatingProduct {
                 imgData[i] = img;
             }
         }
-        //console.log(imgData);
+        console.log(imgData);
     }
 
     /*делаю стрелочную ф-цию чтобы не терялся this*/
@@ -124,30 +121,30 @@ class RotatingProduct {
         this.srcData.every(el => {
             if (el instanceof Object) {
                 this.cvs.removeEventListener('mouseenter', this.downloadAllImage);
-                this.rotate = true;
-                //console.log(this.rotate)
+                this.isRotate = true;
+                console.log(this.isRotate)
             }
         })
     }
 
     moveIt = (e) => {
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX);
-        let pageX = ~~(this.event.runX / (1000 / 60));
-
-        this.img = this.interval(pageX, this.srcData.length)
-
-        if (this.img > 0) {
-            this.draw(this.srcData[this.srcData.length - this.img])
-
-        } else if (this.img <= 0) {
-            this.draw(this.srcData[Math.abs(this.img)])
+        let pageX = Math.floor(this.event.runX / (1000 / 60));
+        this.i = this.interval(pageX, this.srcData.length, this.event.endX);
+        if (this.i > 0) {
+            this.draw(this.srcData[this.srcData.length - this.i])
+        } else if (this.i <= 0) {
+            this.draw(this.srcData[Math.abs(this.i)])
         }
-
     }
 
-    interval(coord, length) {
-        let i = ~~(coord / length);
-        let newX = coord - (i * length);
+    interval(coord, length, endX) {
+        let int = Math.floor(coord / length);
+        let newX = coord - (int * length);
+        newX += endX;
+        int = Math.floor(newX / length);
+        newX = newX - (int * length);
+        console.log(newX);
         //console.log('coord:', coord, 'length:', length, 'i:', i, 'newX:', newX)
         return newX;
     }
@@ -168,60 +165,16 @@ class RotatingProduct {
 }
 
 
-let b = new RotatingProduct('cvs', 400, 400, srcData)
+let b = new RotatingProduct('cvs', srcData)
 
 
 
 
 
-
-
-
-
-//  /*ТЕСТОВЫЕ*/
-//  
-//  this.range.addEventListener('input', () => {
-//      if (this.rotate) {
-//          this.clear()
-//          this.draw(this.srcData[this.spin(this.range)])
-//      }
-//  });
-//  /*ТЕСТОВЫЕ*/
-
-
-
-// controlAll.forEach(control => {
-//     scaleAll.forEach(scale => {
-//         let volume;
-//         control.addEventListener(begin, function(e) {
-//             let centerX = this.offsetWidth / 2;
-
-//             function moveAt(e) {
-//                 let pX = run === 'touchmove' ? e.touches[0].pageX : e.pageX;
-//                 volume = pX - scale.getBoundingClientRect().x - centerX;
-//                 if (volume >= scale.offsetWidth - control.offsetWidth) {
-//                     volume = scale.offsetWidth - control.offsetWidth;
-//                 }
-//                 if (volume <= 0) {
-//                     volume = 0;
-//                 }
-
-//                 control.style.left = $ { volume }
-//                 px;
-
-//                 if (control.dataset.s === 'sound') {
-//                     //sound.volume = volume / 180;
-//                 }
-//                 if (control.dataset.s === 'music') {
-//                     //mus.volume = volume / 180;
-//                 }
-
-//             }
-//             document.addEventListener(run, moveAt)
-//             window.addEventListener(end, function(e) {
-//                 document.removeEventListener(run, moveAt)
-//             });
-//         });
-//     });
-
-// });
+/*
+    1.Добавить endX чтобы не сбивались координаты - Complete
+    2. разобраться с Sibling
+    3. Разобраться с анимацией
+    4. добавить событие колесикаб, если мышь находиться на канвасе
+    5. убрать интервал в событии
+*/

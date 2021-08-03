@@ -13,6 +13,15 @@
 }
 
 #cvs {
+    cursor: grab;
+}
+
+#cvs {
+    transition: all .3s ease-in-out;
+}
+
+.cvs-active {
+    box-shadow: 0 0 5px 4px #f7f7f7;
 }
 
 .rangeBlock {
@@ -21,46 +30,45 @@
 }
 
 .parent-cvs {
-  position: relative;
+    position: relative;
 }
 
-.sibling-cvs{
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #322C2CB3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.sibling-cvs {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #322C2CB3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
 .rotate {
-  width: 100px;
-  
+    width: 100px;
 }
 
 .rotate-active {
-  animation: load-image 3s infinite linear;
+    animation: load-image 3s infinite linear;
 }
 
-
 @keyframes load-image {
-  0%{
-    transform: rotateZ(0);
-  }
-  25%{
-    transform: rotateZ(90deg);
-  }
-  50%{
-    transform: rotateZ(180deg);
-  }
-  75%{
-    transform: rotateZ(270deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
+    0% {
+        transform: rotateZ(0);
+    }
+    25% {
+        transform: rotateZ(90deg);
+    }
+    50% {
+        transform: rotateZ(180deg);
+    }
+    75% {
+        transform: rotateZ(270deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
 }
