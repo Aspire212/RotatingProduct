@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cvs {
+    border: solid red 1px;
+}
+
+.rangeBlock {
+    margin-top: 40px;
+    text-align: center;
+}
