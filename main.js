@@ -41,6 +41,7 @@ class RotatingProduct {
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
         this.rotate = false; //возможность вращения
+        this.img = 0 // номер каринки
         this.event = {
             begin: 'mousedown',
             run: 'mousemove',
@@ -133,13 +134,13 @@ class RotatingProduct {
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX);
         let pageX = ~~(this.event.runX / (1000 / 60));
 
-        let x = this.interval(pageX, this.srcData.length)
+        this.img = this.interval(pageX, this.srcData.length)
 
-        if (x > 0) {
-            this.draw(this.srcData[this.srcData.length - x])
+        if (this.img > 0) {
+            this.draw(this.srcData[this.srcData.length - this.img])
 
-        } else if (x <= 0) {
-            this.draw(this.srcData[Math.abs(x)])
+        } else if (this.img <= 0) {
+            this.draw(this.srcData[Math.abs(this.img)])
         }
 
     }
