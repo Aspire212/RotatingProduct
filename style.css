@@ -13,10 +13,54 @@
 }
 
 #cvs {
-    border: solid red 1px;
 }
 
 .rangeBlock {
     margin-top: 40px;
     text-align: center;
+}
+
+.parent-cvs {
+  position: relative;
+}
+
+.sibling-cvs{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #322C2CB3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rotate {
+  width: 100px;
+  
+}
+
+.rotate-active {
+  animation: load-image 3s infinite linear;
+}
+
+
+@keyframes load-image {
+  0%{
+    transform: rotateZ(0);
+  }
+  25%{
+    transform: rotateZ(90deg);
+  }
+  50%{
+    transform: rotateZ(180deg);
+  }
+  75%{
+    transform: rotateZ(270deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
 }

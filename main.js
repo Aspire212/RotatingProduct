@@ -28,9 +28,12 @@ let srcData = [
 class RotatingProduct {
     constructor(cvsID, cvsWidth, cvsHeight, srcImages) {
         /*тестовые*/
-        this.range = document.getElementById('range');
+        
         /*тестовые*/
         this.cvs = document.getElementById(cvsID); // канвас
+        
+        this.sibling = this.cvs.nextElementSibling
+        
         this.cvs.width = cvsWidth; // ширина канваса
         this.cvs.height = cvsHeight; // высота канваса
         this.ctx = this.cvs.getContext('2d'); // контекст
@@ -58,6 +61,24 @@ class RotatingProduct {
             this.event.run = 'touchmove';
             this.event.end = 'touchend';
         }
+        
+        
+    
+        this.sibling.addEventListener('click', () => {
+        this.sibling.children[0].classList.add('rotate-active');
+          
+          this.downloadAllImage();
+          if (this.rotate) {
+            //стилизовать
+            this.cvs.nextElementSibling.children[0].remove('rotate-active');
+            this.cvs.nextElementSibling.style.height = 0
+            
+          }
+        })
+        
+        
+        
+        
 
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
@@ -71,7 +92,7 @@ class RotatingProduct {
 
         });
         // по наведению на канвас загружаю все картинки
-        this.cvs.addEventListener('mouseenter', this.downloadAllImage);
+        //this.cvs.addEventListener('mouseenter', this.downloadAllImage);
 
     }
 
@@ -91,7 +112,7 @@ class RotatingProduct {
                 imgData[i] = img;
             }
         }
-        console.log(imgData);
+        //console.log(imgData);
     }
 
     /*делаю стрелочную ф-цию чтобы не терялся this*/
@@ -103,7 +124,7 @@ class RotatingProduct {
             if (el instanceof Object) {
                 this.cvs.removeEventListener('mouseenter', this.downloadAllImage);
                 this.rotate = true;
-                console.log(this.rotate)
+                //console.log(this.rotate)
             }
         })
     }
