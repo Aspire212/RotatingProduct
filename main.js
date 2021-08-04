@@ -75,6 +75,7 @@ class RotatingProduct {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
             this.body.style.cursor = 'grabbing'; //изменяю курсор у всей страницы чтобы выходя за границу cvs курсор не менялся
+            this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события
             if (this.isRotate) {
                 window.addEventListener(this.event.run, this.imageReplacementDrag); // получаю динамический Х и отрисовываю вращение
                 window.addEventListener(this.event.end, (e) => {
@@ -82,6 +83,7 @@ class RotatingProduct {
                     this.cvs.style.cursor = 'grab'; // возвращаю курсор
                     this.body.style.cursor = 'auto'; // возвращаю стандартное значение
                     this.cvs.classList.remove('cvs-active'); // удаляю фокус
+                    this.body.style.overflow = 'auto'; //разрешаю прокрутку
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
             }
@@ -187,4 +189,5 @@ window.addEventListener('DOMContentLoaded', () => {
     7. Переработать пропадание ырфвщц на канвасе
     8. добавлять соседний элемент чепез конструктор
     9. если по соседству будут элементы с другим курсором то менять курсом элементам добавляя класс при помощи цикла
+    10. запретить скрол страницы во время драг
 */
