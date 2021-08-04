@@ -75,7 +75,9 @@ class RotatingProduct {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
             this.body.style.cursor = 'grabbing'; //изменяю курсор у всей страницы чтобы выходя за границу cvs курсор не менялся
-            this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события
+            }
             if (this.isRotate) {
                 window.addEventListener(this.event.run, this.imageReplacementDrag); // получаю динамический Х и отрисовываю вращение
                 window.addEventListener(this.event.end, (e) => {
