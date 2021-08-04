@@ -26,11 +26,11 @@ let srcData = [
 
 
 class RotatingProduct {
-    constructor(cvsID, srcImages) {
+    constructor(cvsID, srcData) {
         this.cvs = document.getElementById(cvsID); // канвас
         this.shadow = this.cvs.nextElementSibling; // абсолютный сосед
         this.ctx = this.cvs.getContext('2d'); // контекст
-        this.srcData = srcImages; //массив путей
+        this.srcData = srcData; //массив путей
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
         this.isRotate = false; //возможность вращения
