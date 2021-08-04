@@ -75,10 +75,10 @@ class RotatingProduct {
         this.cvs.addEventListener(this.event.begin, (e) => {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             if (this.isRotate) {
-                window.addEventListener(this.event.run, this.imageReplacement);
+                window.addEventListener(this.event.run, this.imageReplacementDrag);
                 window.addEventListener(this.event.end, (e) => {
                     this.event.endI = this.i; // получаю последний индекс картинки
-                    window.removeEventListener(this.event.run, this.imageReplacement);
+                    window.removeEventListener(this.event.run, this.imageReplacementDrag);
                 });
             }
 
@@ -86,6 +86,7 @@ class RotatingProduct {
         // почва для вращения колесом
         this.cvs.addEventListener(this.event.over, () => {
             this.cvs.classList.add('cvs-active');
+            this.cvs.addEventListener('wheel', this.imageReplacementWheel)
             this.cvs.addEventListener(this.event.leave, () => {
                 this.cvs.classList.remove('cvs-active');
             });
@@ -124,8 +125,8 @@ class RotatingProduct {
             }
         })
     };
-    // метод вращения
-    imageReplacement = (e) => {
+    // метод вращения при помощи перетягивания
+    imageReplacementDrag = (e) => {
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
         let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
         this.i = this.interval(pageX, this.srcData.length, this.event.endI); //получаю индексе картинки
@@ -135,6 +136,24 @@ class RotatingProduct {
             this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
         }
     };
+    //метод вращения колесом
+    imageReplacementWheel = (e) => {
+        e.preventDefault(); // отменяю скрол страницы пока курсор стоит на канвасе
+        if (Math.abs(this.i) >= this.srcData.length - 1) {
+            this.i = 0;
+        } else {
+            this.i += e.deltaY > 0 ? 1 : -1; // в зависимости от напрвления движения вращаю изображение
+            this.event.endI = this.i; // для хранения координат
+        }
+        if (this.i > 0) {
+            this.draw(this.srcData[this.srcData.length - this.i]) //исходя из условия отрисовываю
+        } else if (this.i <= 0) {
+            this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
+        }
+    };
+
+
+
 
     //метод расчета интервалов
     interval(coord, length, endI) {
@@ -149,8 +168,10 @@ class RotatingProduct {
 }
 
 
-let b = new RotatingProduct('cvs', srcData)
+let test = new RotatingProduct('cvs', srcData);
 
+
+console.log(test)
 
 
 
