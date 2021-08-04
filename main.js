@@ -120,10 +120,11 @@ class RotatingProduct {
                 count++
                 if (count === this.srcData.length - 2) { // -2 потому-что 1ую картинку мы загрузили ранее
                     this.isRotate = true; //разрешаю вращение
-                    this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
-                    console.log(this.isRotate)
-                    this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
-                    this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
+                    setTimeout(() => {
+                        this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
+                        this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
+                        this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
+                    }, 1000); // искуственная задержка для анимации
                 }
             };
         });
