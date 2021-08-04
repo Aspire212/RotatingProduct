@@ -53,11 +53,6 @@
     animation: load-image 3s infinite linear;
 }
 
-.h {
-    height: 5000px;
-    background: green;
-}
-
 @keyframes load-image {
     0% {
         transform: rotateZ(0);
