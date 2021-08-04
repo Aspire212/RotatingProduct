@@ -35,6 +35,7 @@ class RotatingProduct {
         this.by = 0; // крайняя верхняя точка канваса
         this.isRotate = false; //возможность вращения
         this.i = 0 // номер каринки
+        this.focus = false; // для правильной работы фокуса в разных событиях
         this.event = {
             start: 'click', // тригер для удаления заглушки и начала работы с канвасом
             begin: 'mousedown', // тригер для beginX
@@ -77,7 +78,8 @@ class RotatingProduct {
                     this.event.endI = this.i; // получаю последний индекс картинки
                     this.cvs.style.cursor = 'grab'; // возвращаю курсор
                     this.body.style.cursor = 'auto'; // возвращаю стандартное значение
-                    this.cvs.classList.remove('cvs-active'); // удаляю фокус
+                    this.focus = false; // отключаю фокус
+                    !this.focus && this.cvs.classList.remove('cvs-active'); // удаляю класс фокуса
                     this.body.style.overflow = 'auto'; //разрешаю прокрутку поставив дефолтное значение, не ломаю телефонную прокрутку
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
@@ -85,10 +87,12 @@ class RotatingProduct {
         });
         // событие срабатывающее когда мышь находиться над канвасом
         this.cvs.addEventListener(this.event.over, () => {
+            this.focus = true; // делаю фокус активным
             this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
             this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel) //пока элемент в фокусе разрешаю вращение колесом
             this.cvs.addEventListener(this.event.leave, () => { // когда мышь уходит с канваса
-                this.cvs.classList.remove('cvs-active'); // удаляю класс показывающий фокус
+                this.focus = false; // отключаю фокусн
+                !this.focus && this.cvs.classList.remove('cvs-active'); // удаляю класс показывающий фокус
             });
         });
     };
@@ -123,6 +127,7 @@ class RotatingProduct {
                     setTimeout(() => {
                         this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
                         this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
+                        this.shadow.children[0].style.height = 0; //картинку в месте родительским елементом
                         this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
                     }, 1000); // искуственная задержка для анимации
                 }
@@ -131,7 +136,8 @@ class RotatingProduct {
     };
     // метод вращения при помощи перетягивания
     imageReplacementDrag = (e) => {
-        !this.cvs.classList.contains('cvs-active') && this.cvs.classList.add('cvs-active'); // возвращаю фокус до тех пор пока не отпустят мышь 128
+        this.focus = true; // пока работает move ащсгы активен
+        this.focu = this.cvs.classList.add('cvs-active'); // возвращаю фокус до тех пор пока не отпустят мышь 128
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
         let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
         this.i = this.interval(pageX, this.srcData.length, this.event.endI); //получаю индексе картинки
