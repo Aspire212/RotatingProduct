@@ -89,7 +89,7 @@ class RotatingProduct {
         this.cvs.addEventListener(this.event.over, () => {
             this.focus = true; // делаю фокус активным
             this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
-            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel) //пока элемент в фокусе разрешаю вращение колесом
+            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel, { passive: false }) //пока элемент в фокусе разрешаю вращение колесом
             this.cvs.addEventListener(this.event.leave, () => { // когда мышь уходит с канваса
                 this.focus = false; // отключаю фокусн
                 !this.focus && this.cvs.classList.remove('cvs-active'); // удаляю класс показывающий фокус
@@ -150,10 +150,15 @@ class RotatingProduct {
     //метод вращения колесом
     imageReplacementWheel = (e) => {
         e.preventDefault(); // отменяю скрол страницы пока курсор стоит на канвасе
+        let x = e.deltaX;
+        let y = e.deltaY;
         if (Math.abs(this.i) >= this.srcData.length - 1) {
             this.i = 0;
         } else {
-            this.i += e.deltaY > 0 ? 1 : -1; // в зависимости от напрвления движения вращаю изображение
+            if (x > -1 && x < 1 && y > 0) this.i += 1; // скролл по вертикали
+            else if (x > -1 && x < 1 && y < 0) this.i -= 1; // скролл по вертикали
+            else if (y > -1 && y < 1 && x > 0) this.i += 1; // скролл по гризонтали
+            else if (y > -1 && y < 1 && x < 0) this.i -= 1; // скролл по горизонтали
             this.event.endI = this.i; // для хранения координат
         }
         if (this.i > 0) {
