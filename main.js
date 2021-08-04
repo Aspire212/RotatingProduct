@@ -1,4 +1,5 @@
 'use strict';
+
 let srcData = [
     "images/SPBG130-35900-01.jpg",
     "images/SPBG130-35900-02.jpg",
@@ -22,10 +23,12 @@ let srcData = [
     "images/SPBG130-35900-20.jpg"
 ];
 class RotatingProduct {
-    constructor(cvsID, srcData) {
+    constructor(cvsID, width, height, srcData) {
         this.cvs = document.getElementById(cvsID); // канвас
+        this.cvs.width = width; // ширина канваса
+        this.cvs.height = height; // высота канваса
         this.shadow = this.cvs.nextElementSibling; // абсолютный сосед
-        this.ctx = this.cvs.getContext('2d'); // контекст
+        this.ctx = this.cvs.getContext('2d'); // пространство работы
         this.srcData = srcData; //массив путей
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
@@ -154,7 +157,17 @@ class RotatingProduct {
 }
 
 
-let test = new RotatingProduct('cvs', srcData);
+
+
+window.addEventListener('DOMContentLoaded', () => {
+
+
+    let test = new RotatingProduct('cvs', 400, 400, srcData);
+
+});
+
+
+
 
 
 /*
