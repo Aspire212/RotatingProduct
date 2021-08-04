@@ -220,4 +220,5 @@ window.addEventListener('DOMContentLoaded', () => {
     11. Разбить allMutation на несколько методов
     12. Добавть размеры для медиазапросов
     13. подумать над переключателями оver
+    14. переделать forEach на every и убрать counter
 */
