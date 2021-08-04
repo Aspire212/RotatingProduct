@@ -72,10 +72,12 @@ class RotatingProduct {
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
+            this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
             if (this.isRotate) {
                 window.addEventListener(this.event.run, this.imageReplacementDrag); // получаю динамический Х и отрисовываю вращение
                 window.addEventListener(this.event.end, (e) => {
                     this.event.endI = this.i; // получаю последний индекс картинки
+                    this.cvs.style.cursor = 'grab'; // возвращаю курсо
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
             }
