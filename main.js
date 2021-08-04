@@ -28,6 +28,7 @@ class RotatingProduct {
         this.cvs.width = width; // ширина канваса
         this.cvs.height = height; // высота канваса
         this.shadow = this.cvs.nextElementSibling; // абсолютный сосед
+        this.body = document.querySelector('body'); //вся страница
         this.ctx = this.cvs.getContext('2d'); // пространство работы
         this.srcData = srcData; //массив путей
         this.bx = 0; // крайняя левая точка канваса
@@ -73,11 +74,13 @@ class RotatingProduct {
         this.cvs.addEventListener(this.event.begin, (e) => {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
+            this.body.style.cursor = 'grabbing'; //изменяю курсор у всей страницы чтобы выходя за границу cvs курсор не менялся
             if (this.isRotate) {
                 window.addEventListener(this.event.run, this.imageReplacementDrag); // получаю динамический Х и отрисовываю вращение
                 window.addEventListener(this.event.end, (e) => {
                     this.event.endI = this.i; // получаю последний индекс картинки
-                    this.cvs.style.cursor = 'grab'; // возвращаю курсо
+                    this.cvs.style.cursor = 'grab'; // возвращаю курсор
+                    this.body.style.cursor = 'auto'; // возвращаю стандартное значение
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
             }
@@ -181,4 +184,5 @@ window.addEventListener('DOMContentLoaded', () => {
     6. Добавить второй cvs-active с теми же стилями но зависящий от драг событий
     7. Переработать пропадание ырфвщц на канвасе
     8. добавлять соседний элемент чепез конструктор
+    9. если по соседству будут элементы с другим курсором то менять курсом элементам добавляя класс при помощи цикла
 */
