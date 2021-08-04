@@ -114,10 +114,10 @@ class RotatingProduct {
     allMutation = () => {
         //изменяю все элементы
         this.srcData = this.srcData.map(el => el = this.mutation(el));
-        let count = 0; //считаю количество загруженых
+        let count = 0; //количество загруженых
         this.srcData.forEach(img => {
             img.onload = () => {
-                count++
+                count++; //если загружена увеличиваю сыетчик
                 if (count === this.srcData.length - 2) { // -2 потому-что 1ую картинку мы загрузили ранее
                     this.isRotate = true; //разрешаю вращение
                     setTimeout(() => {
@@ -136,9 +136,9 @@ class RotatingProduct {
         let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
         this.i = this.interval(pageX, this.srcData.length, this.event.endI); //получаю индексе картинки
         if (this.i > 0) {
-            this.draw(this.srcData[this.srcData.length - this.i]) //исходя из условия отрисовываю
+            this.draw(this.srcData[this.srcData.length - this.i]); //исходя из условия отрисовываю
         } else if (this.i <= 0) {
-            this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
+            this.draw(this.srcData[Math.abs(this.i)]); //исходя из условия отрисовываю
         }
     };
     //метод вращения колесом
@@ -177,6 +177,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let test = new RotatingProduct('cvs', 400, 400, srcData);
 
 });
+
 
 
 
