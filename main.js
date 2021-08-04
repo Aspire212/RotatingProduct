@@ -20,11 +20,7 @@ let srcData = [
     "images/SPBG130-35900-18.jpg",
     "images/SPBG130-35900-19.jpg",
     "images/SPBG130-35900-20.jpg"
-]
-
-
-
-
+];
 class RotatingProduct {
     constructor(cvsID, srcData) {
         this.cvs = document.getElementById(cvsID); // канвас
@@ -45,20 +41,16 @@ class RotatingProduct {
             runX: 0, // значение х при событии mousemove
             endI: 0, // значение this при событии mouseup
         }; // объект содержащий названия событий и переменные для этих событий
-
         // изменяем первый элемент массива и загружаем его
         this.srcData[0] = this.mutation(this.srcData[0]);
-
         //выводим ее в canvas
         this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
-
         // если устройство телефон - меня события на телефонные
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
             this.event.begin = 'touchstart';
             this.event.run = 'touchmove';
             this.event.end = 'touchend';
         };
-
         this.shadow.addEventListener('click', () => {
             this.shadow.children[0].classList.add('rotate-active');
             this.allMutation();
@@ -70,7 +62,6 @@ class RotatingProduct {
                 }, 500)
             }
         });
-
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
@@ -81,7 +72,6 @@ class RotatingProduct {
                     window.removeEventListener(this.event.run, this.imageReplacementDrag);
                 });
             }
-
         });
         // почва для вращения колесом
         this.cvs.addEventListener(this.event.over, () => {
@@ -91,7 +81,6 @@ class RotatingProduct {
                 this.cvs.classList.remove('cvs-active');
             });
         });
-
     };
     // метод отрисовки
     draw(img) {
@@ -101,8 +90,6 @@ class RotatingProduct {
     clear() {
         this.ctx.clearRect(this.bx, this.by, this.cvs.width, this.cvs.height);
     };
-
-
     // метод меняющий путь на картинку
     mutation(el) {
         let img = new Image(); // создаю картинку
@@ -113,7 +100,6 @@ class RotatingProduct {
             return el; //если не строка, ничего не делаю
         }
     };
-
     // делаю стрелочную ф-цию чтобы не терялся this
     allMutation = () => {
         //изменяю все элементы
@@ -151,7 +137,6 @@ class RotatingProduct {
             this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
         }
     };
-
     //метод расчета интервалов
     interval(coord, length, endI) {
         let int = Math.floor(coord / length); // получаю интервал исходя и координат / количество картинок в массиве
