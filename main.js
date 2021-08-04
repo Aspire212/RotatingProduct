@@ -82,7 +82,7 @@ class RotatingProduct {
                 });
             }
         });
-        // когда мышь находиться над канвасом
+        // событие срабатывающее когда мышь находиться над канвасом
         this.cvs.addEventListener(this.event.over, () => {
             this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
             this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel) //пока элемент в фокусе разрешаю вращение колесом
