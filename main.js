@@ -47,8 +47,8 @@ class RotatingProduct {
         }; // объект содержащий названия событий и переменные для этих событий
 
         //изменяем первый элемент массива и загружаем его
-        this.downloadImage(this.srcData, 1);
-
+        this.srcData[0] = this.mutation(this.srcData[0]);
+        
         //выводим ее в canvas
         this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
 
@@ -61,7 +61,7 @@ class RotatingProduct {
 
         this.shadow.addEventListener('click', () => {
             this.shadow.children[0].classList.add('rotate-active');
-            this.downloadAllImage();
+            this.allMutation();
             if (this.isRotate) {
                 //стилизовать
                 setTimeout(() => {
@@ -102,22 +102,23 @@ class RotatingProduct {
     };
 
     /*
-    загрузка картинок по определенному количеству
+    метод меняющий путь на картинку 
     */
-    downloadImage(imgData, amountMutation) { // amountMutation колличество элементов
-        for (let i = 0; i < amountMutation; i++) {
-            let img = new Image(); // создаю картинку
-            if (typeof imgData[i] === 'string') { //проверяю элементы на строку
-                img.src = imgData[i]; // добавляю путь к картинке
-                imgData[i] = img; // заменяю строку с путем к картинке в массиве на картинку
-            }
+    mutation(el) { 
+        let img = new Image(); // создаю картинку
+        if (typeof el === 'string') { //проверяю элементы на строку
+        img.src = el; // добавляю путь к картинке
+        return img; // заменяю строку с путем к картинке в массиве на картинку
         }
-        console.log(imgData);
+        else {
+          return el; //если не строка, ничего не делаю
+        }
     };
 
     /*делаю стрелочную ф-цию чтобы не терялся this*/
-    downloadAllImage = () => {
-        this.downloadImage(this.srcData, this.srcData.length) // вместо метода "мар" использую метод загрузки первой картинки
+    allMutation = () => {
+      //изменяю все элементы
+        this.srcData = this.srcData.map(el =>  el = this.mutation(el));
         this.srcData.every(el => {
             if (el instanceof Object) { // если все элементы массива стали объектами
                 this.isRotate = true; //разрешаю вращение
