@@ -14,9 +14,6 @@
 
 #cvs {
     cursor: grab;
-}
-
-#cvs {
     transition: all .3s ease-in-out;
 }
 
@@ -24,16 +21,11 @@
     box-shadow: 0 0 5px 4px #f7f7f7;
 }
 
-.rangeBlock {
-    margin-top: 40px;
-    text-align: center;
-}
-
-.parent-cvs {
+.wrapper-cvs {
     position: relative;
 }
 
-.sibling-cvs {
+.shadow-cvs {
     content: "";
     position: absolute;
     top: 0;
@@ -45,6 +37,12 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.shadow-cvs-hidden {
+    opacity: 0;
 }
 
 .rotate {
@@ -53,6 +51,11 @@
 
 .rotate-active {
     animation: load-image 3s infinite linear;
+}
+
+.h {
+    height: 5000px;
+    background: green;
 }
 
 @keyframes load-image {
@@ -71,9 +74,4 @@
     100% {
         transform: rotateZ(360deg);
     }
-}
-
-.h {
-    height: 5000px;
-    background: green;
 }

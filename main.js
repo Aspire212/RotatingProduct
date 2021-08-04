@@ -59,16 +59,9 @@ class RotatingProduct {
             this.event.end = 'touchend'; // тригер для endI и удаления тригера run
         }
         // событие начала
-        this.shadow.addEventListener(this.event.start, () => {
-            this.shadow.children[0].classList.add('rotate-active'); // запускаю анимацию пока работает allMuttion
+        this.shadow.addEventListener(this.event.start, async() => {
             this.allMutation(); // преобразую строки в картинки
-            if (this.isRotate) { // проверка на возможность вращения
-                // искуственная задержка
-                setTimeout(() => {
-                    this.shadow.children[0].remove('rotate-active'); // останавливаю анимацию
-                    this.shadow.style.height = 0; // удаляю перекрывющий канвас элемент  -- переделать на класс
-                }, 500);
-            }
+            this.shadow.children[0].classList.add('rotate-active'); // вращаю 360 пока загружаються картинки
         });
         // драг события
         this.cvs.addEventListener(this.event.begin, (e) => {
@@ -121,11 +114,18 @@ class RotatingProduct {
     allMutation = () => {
         //изменяю все элементы
         this.srcData = this.srcData.map(el => el = this.mutation(el));
-        this.srcData.every(el => {
-            if (el instanceof Object) { // если все элементы массива стали объектами
-                this.isRotate = true; //разрешаю вращение
-                console.log(this.isRotate)
-            }
+        let count = 0; //считаю количество загруженых
+        this.srcData.forEach(img => {
+            img.onload = () => {
+                count++
+                if (count === this.srcData.length - 2) { // -2 потому-что 1ую картинку мы загрузили ранее
+                    this.isRotate = true; //разрешаю вращение
+                    this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
+                    console.log(this.isRotate)
+                    this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
+                    this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
+                }
+            };
         });
     };
     // метод вращения при помощи перетягивания
@@ -184,7 +184,7 @@ window.addEventListener('DOMContentLoaded', () => {
 /*
     1.Добавить endX чтобы не сбивались координаты - Complete
     2. Разобраться с Sibling
-    3. Разобраться с анимацией
+    3. Разобраться с анимацией - Complete
     4. Добавить событие колесика, если мышь находиться на канвасе - Complete
     5. Убрать интервал в событии - Complete
     6. Добавить второй cvs-active с теми же стилями но зависящий от драг событий - Complete
@@ -192,4 +192,5 @@ window.addEventListener('DOMContentLoaded', () => {
     8. добавлять соседний элемент чепез конструктор ??
     9. если по соседству будут элементы с другим курсором то менять курсом элементам добавляя класс при помощи цикла
     10. запретить скрол страницы во время драг - Complete
+    11. Разбить allMutation на несколько методов
 */
