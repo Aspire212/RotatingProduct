@@ -81,6 +81,7 @@ class RotatingProduct {
                     this.event.endI = this.i; // получаю последний индекс картинки
                     this.cvs.style.cursor = 'grab'; // возвращаю курсор
                     this.body.style.cursor = 'auto'; // возвращаю стандартное значение
+                    this.cvs.classList.remove('cvs-active'); // удаляю фокус
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
             }
@@ -125,6 +126,7 @@ class RotatingProduct {
     };
     // метод вращения при помощи перетягивания
     imageReplacementDrag = (e) => {
+        !this.cvs.classList.contains('cvs-active') && this.cvs.classList.add('cvs-active'); // возвращаю фокус до тех пор пока не отпустят мышь 128
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
         let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
         this.i = this.interval(pageX, this.srcData.length, this.event.endI); //получаю индексе картинки
