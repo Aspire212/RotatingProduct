@@ -77,12 +77,12 @@ class RotatingProduct {
                 });
             }
         });
-        // почва для вращения колесом
+        // когда мышь находиться над канвасом
         this.cvs.addEventListener(this.event.over, () => {
-            this.cvs.classList.add('cvs-active');
-            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel)
-            this.cvs.addEventListener(this.event.leave, () => {
-                this.cvs.classList.remove('cvs-active');
+            this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
+            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel) //пока элемент в фокусе разрешаю вращение колесом
+            this.cvs.addEventListener(this.event.leave, () => { // когда мышь уходит с канваса
+                this.cvs.classList.remove('cvs-active'); // удаляю класс показывающий фокус
             });
         });
     };
