@@ -76,7 +76,7 @@ class RotatingProduct {
             this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
             this.body.style.cursor = 'grabbing'; //изменяю курсор у всей страницы чтобы выходя за границу cvs курсор не менялся
             if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-                this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события
+                this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события только для пк
             }
             if (this.isRotate) {
                 window.addEventListener(this.event.run, this.imageReplacementDrag); // получаю динамический Х и отрисовываю вращение
@@ -85,7 +85,7 @@ class RotatingProduct {
                     this.cvs.style.cursor = 'grab'; // возвращаю курсор
                     this.body.style.cursor = 'auto'; // возвращаю стандартное значение
                     this.cvs.classList.remove('cvs-active'); // удаляю фокус
-                    this.body.style.overflow = 'auto'; //разрешаю прокрутку
+                    this.body.style.overflow = 'auto'; //разрешаю прокрутку поставив дефолтное значение, не ломаю телефонную прокрутку
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
                 });
             }
@@ -188,8 +188,8 @@ window.addEventListener('DOMContentLoaded', () => {
     4. Добавить событие колесика, если мышь находиться на канвасе - Complete
     5. Убрать интервал в событии - Complete
     6. Добавить второй cvs-active с теми же стилями но зависящий от драг событий - Complete
-    7. Переработать пропадание ырфвщц на канвасе
-    8. добавлять соседний элемент чепез конструктор
+    7. Переработать пропадание shadow на канвасе
+    8. добавлять соседний элемент чепез конструктор ??
     9. если по соседству будут элементы с другим курсором то менять курсом элементам добавляя класс при помощи цикла
-    10. запретить скрол страницы во время драг
+    10. запретить скрол страницы во время драг - Complete
 */
