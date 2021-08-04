@@ -55,7 +55,7 @@ class RotatingProduct {
             this.event.end = 'touchend'; // тригер для endI и удаления тригера run
         }
         // событие начала
-        this.shadow.addEventListener(start, () => {
+        this.shadow.addEventListener(this.event.start, () => {
             this.shadow.children[0].classList.add('rotate-active'); // запускаю анимацию пока работает allMuttion
             this.allMutation(); // преобразую строки в картинки
             if (this.isRotate) { // проверка на возможность вращения
@@ -80,7 +80,7 @@ class RotatingProduct {
         // почва для вращения колесом
         this.cvs.addEventListener(this.event.over, () => {
             this.cvs.classList.add('cvs-active');
-            this.cvs.addEventListener(wheel, this.imageReplacementWheel)
+            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel)
             this.cvs.addEventListener(this.event.leave, () => {
                 this.cvs.classList.remove('cvs-active');
             });
