@@ -46,9 +46,9 @@ class RotatingProduct {
             endI: 0, // значение this при событии mouseup
         }; // объект содержащий названия событий и переменные для этих событий
 
-        //изменяем первый элемент массива и загружаем его
+        // изменяем первый элемент массива и загружаем его
         this.srcData[0] = this.mutation(this.srcData[0]);
-        
+
         //выводим ее в canvas
         this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
 
@@ -63,7 +63,7 @@ class RotatingProduct {
             this.shadow.children[0].classList.add('rotate-active');
             this.allMutation();
             if (this.isRotate) {
-                //стилизовать
+                // искуственная задержка
                 setTimeout(() => {
                     this.shadow.children[0].remove('rotate-active');
                     this.shadow.style.height = 0
@@ -92,7 +92,7 @@ class RotatingProduct {
         });
 
     };
-    //метод отрисовки
+    // метод отрисовки
     draw(img) {
             this.ctx.drawImage(img, this.bx, this.by, this.cvs.width, this.cvs.height);
         }
@@ -101,24 +101,22 @@ class RotatingProduct {
         this.ctx.clearRect(this.bx, this.by, this.cvs.width, this.cvs.height);
     };
 
-    /*
-    метод меняющий путь на картинку 
-    */
-    mutation(el) { 
+
+    // метод меняющий путь на картинку
+    mutation(el) {
         let img = new Image(); // создаю картинку
         if (typeof el === 'string') { //проверяю элементы на строку
-        img.src = el; // добавляю путь к картинке
-        return img; // заменяю строку с путем к картинке в массиве на картинку
-        }
-        else {
-          return el; //если не строка, ничего не делаю
+            img.src = el; // добавляю путь к картинке
+            return img; // заменяю строку с путем к картинке в массиве на картинку
+        } else {
+            return el; //если не строка, ничего не делаю
         }
     };
 
-    /*делаю стрелочную ф-цию чтобы не терялся this*/
+    // делаю стрелочную ф-цию чтобы не терялся this
     allMutation = () => {
-      //изменяю все элементы
-        this.srcData = this.srcData.map(el =>  el = this.mutation(el));
+        //изменяю все элементы
+        this.srcData = this.srcData.map(el => el = this.mutation(el));
         this.srcData.every(el => {
             if (el instanceof Object) { // если все элементы массива стали объектами
                 this.isRotate = true; //разрешаю вращение
@@ -126,7 +124,7 @@ class RotatingProduct {
             }
         })
     };
-    //метод вращения 
+    // метод вращения
     imageReplacement = (e) => {
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
         let pageX = Math.floor(this.event.runX / (1000 / 60)); // делаю нужную мне скорость вращения
