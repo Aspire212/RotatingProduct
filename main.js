@@ -36,6 +36,7 @@ class RotatingProduct {
         this.isRotate = false; //возможность вращения
         this.i = 0 // номер каринки
         this.focus = false; // для правильной работы фокуса в разных событиях
+        this.isOver = false; // над чем мы
         this.event = {
             start: 'click', // тригер для удаления заглушки и начала работы с канвасом
             begin: 'mousedown', // тригер для beginX
@@ -78,7 +79,7 @@ class RotatingProduct {
                     this.event.endI = this.i; // получаю последний индекс картинки
                     this.cvs.style.cursor = 'grab'; // возвращаю курсор
                     this.body.style.cursor = 'auto'; // возвращаю стандартное значение
-                    this.focus = false; // отключаю фокус
+                    !this.isOver && (this.focus = false); // отключаю фокус
                     !this.focus && this.cvs.classList.remove('cvs-active'); // удаляю класс фокуса
                     this.body.style.overflow = 'auto'; //разрешаю прокрутку поставив дефолтное значение, не ломаю телефонную прокрутку
                     window.removeEventListener(this.event.run, this.imageReplacementDrag); // прекращаю слежение за движениями мыши
@@ -88,10 +89,12 @@ class RotatingProduct {
         // событие срабатывающее когда мышь находиться над канвасом
         this.cvs.addEventListener(this.event.over, () => {
             this.focus = true; // делаю фокус активным
+            this.isOver = true; // на элементе
             this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
             this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel, { passive: false }) //пока элемент в фокусе разрешаю вращение колесом
             this.cvs.addEventListener(this.event.leave, () => { // когда мышь уходит с канваса
                 this.focus = false; // отключаю фокусн
+                this.isOver = false; // ушли
                 !this.focus && this.cvs.classList.remove('cvs-active'); // удаляю класс показывающий фокус
             });
         });
@@ -136,6 +139,7 @@ class RotatingProduct {
     };
     // метод вращения при помощи перетягивания
     imageReplacementDrag = (e) => {
+        this.clearSelection(); //запрещаю выделять текст
         this.focus = true; // пока работает move ащсгы активен
         this.focu = this.cvs.classList.add('cvs-active'); // возвращаю фокус до тех пор пока не отпустят мышь 128
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
@@ -177,6 +181,14 @@ class RotatingProduct {
         //console.log('coord:', coord, 'length:', length, 'i:', i, 'newX:', newX)
         return newX;
     };
+    //метод запрещающий выделение текста
+    clearSelection() {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else { // старый IE
+            document.selection.empty();
+        };
+    }
 }
 
 
