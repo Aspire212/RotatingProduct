@@ -46,7 +46,7 @@ class RotatingProduct {
             leave: 'mouseleave', //тригер для удаления фокуса канваса
             wheel: 'wheel', //тригер для вращения колесом
             screen: 'resize', // изменение размера экрана
-            touchOn: 'ontouchstart', // существуют ли тоуч события
+            isTouch: 'ontouchstart', // существуют ли тоуч события
             beginX: 0, // значение х при событии mousedown
             runX: 0, // значение х при событии mousemove
             endI: 0, // значение this при событии mouseup
@@ -56,7 +56,7 @@ class RotatingProduct {
         //выводим ее в canvas
         this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
         // если устройство телефон - меняю события на телефонные
-        if (this.event.touchOn in document.documentElement) {
+        if (this.event.isTouch in document.documentElement) {
             this.event.start = 'touchend'; // тригер для удаления заглушки и начала работы с канвасом
             this.event.begin = 'touchstart'; // тригер для beginX
             this.event.run = 'touchmove'; // тригер для runX
@@ -72,7 +72,7 @@ class RotatingProduct {
             this.event.beginX = this.event.begin === 'touchstart' ? e.touches[0].pageX : e.pageX; // получаю начальный Х
             this.cvs.style.cursor = 'grabbing'; // изменяю курсор на захват
             this.body.style.cursor = 'grabbing'; //изменяю курсор у всей страницы чтобы выходя за границу cvs курсор не менялся
-            if (this.event.touchOn in document.documentElement) {
+            if (!this.event.isTouch in document.documentElement) {
                 this.body.style.overflow = 'hidden'; //запрещаю прокрутку страницы пока работают драг события только для пк
             }
             if (this.isRotate) {
