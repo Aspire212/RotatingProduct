@@ -45,6 +45,7 @@ class RotatingProduct {
             over: 'mouseenter', //тригер для фокуса канваса
             leave: 'mouseleave', //тригер для удаления фокуса канваса
             wheel: 'wheel', //тригер для вращения колесом
+            screen: 'resize', // изменение размера экрана
             beginX: 0, // значение х при событии mousedown
             runX: 0, // значение х при событии mousemove
             endI: 0, // значение this при событии mouseup
@@ -62,6 +63,7 @@ class RotatingProduct {
         }
         // событие начала
         this.shadow.addEventListener(this.event.start, () => {
+            alert(navigator.userAgent)
             this.allMutation(); // преобразую строки в картинки
             this.shadow.children[0].classList.add('rotate-active'); // вращаю 360 пока загружаються картинки
         });
@@ -139,7 +141,7 @@ class RotatingProduct {
     };
     // метод вращения при помощи перетягивания
     imageReplacementDrag = (e) => {
-        this.clearSelection(); //запрещаю выделять текст
+        window.getSelection().removeAllRanges(); //запрещаю выделять текст
         this.focus = true; // пока работает move ащсгы активен
         this.focu = this.cvs.classList.add('cvs-active'); // возвращаю фокус до тех пор пока не отпустят мышь 128
         this.event.runX = this.event.beginX - (this.event.run === 'touchmove' ? e.touches[0].pageX : e.pageX); //получаю динамический Х
@@ -181,14 +183,6 @@ class RotatingProduct {
         //console.log('coord:', coord, 'length:', length, 'i:', i, 'newX:', newX)
         return newX;
     };
-    //метод запрещающий выделение текста
-    clearSelection() {
-        if (window.getSelection) {
-            window.getSelection().removeAllRanges();
-        } else { // старый IE
-            document.selection.empty();
-        };
-    }
 }
 
 
@@ -214,11 +208,11 @@ window.addEventListener('DOMContentLoaded', () => {
     5. Убрать интервал в событии - Complete
     6. Добавить второй cvs-active с теми же стилями но зависящий от драг событий - Complete
     7. Переработать пропадание shadow на канвасе - Complete
-    8. добавлять соседний элемент чепез конструктор ??
+    8. добавлять соседний элемент чепез конструктор  - передумал
     9. если по соседству будут элементы с другим курсором то менять курсом элементам добавляя класс при помощи цикла
     10. запретить скрол страницы во время драг - Complete
     11. Разбить allMutation на несколько методов
-    12. Добавть размеры для медиазапросов
+    12. Добавть размеры для медиазапросов -  рулиться css
     13. подумать над переключателями оver
     14. переделать forEach на every и убрать counter
 */
