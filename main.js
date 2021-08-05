@@ -53,7 +53,7 @@ class RotatingProduct {
         this.srcData[0] = this.mutation(this.srcData[0]);
         //выводим ее в canvas
         this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
-        // если устройство телефон - меня события на телефонные
+        // если устройство телефон - меняю события на телефонные
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
             this.event.start = 'touchend'; // тригер для удаления заглушки и начала работы с канвасом
             this.event.begin = 'touchstart'; // тригер для beginX
@@ -61,7 +61,7 @@ class RotatingProduct {
             this.event.end = 'touchend'; // тригер для endI и удаления тригера run
         }
         // событие начала
-        this.shadow.addEventListener(this.event.start, async() => {
+        this.shadow.addEventListener(this.event.start, () => {
             this.allMutation(); // преобразую строки в картинки
             this.shadow.children[0].classList.add('rotate-active'); // вращаю 360 пока загружаються картинки
         });
@@ -221,4 +221,26 @@ window.addEventListener('DOMContentLoaded', () => {
     12. Добавть размеры для медиазапросов
     13. подумать над переключателями оver
     14. переделать forEach на every и убрать counter
+*/
+
+/*
+let arr = ['im1.jpg', 'im2.png'];
+let promises = [];
+
+arr.forEach(path => getImage(path))
+
+Promise.all(promises)
+  .then(images => {
+    images.forEach(img => console.log(img))
+  })
+
+function getImage(src) {
+  promises.push(new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject();
+    img.src = src;
+    })
+  )
+}
 */
