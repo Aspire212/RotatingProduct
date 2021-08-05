@@ -37,6 +37,7 @@ class RotatingProduct {
         this.i = 0; // номер каринки
         this.focus = false; // для правильной работы фокуса в разных событиях
         this.isOver = false; // над чем мы
+        this.promises = []; //пустой массив для сохранения загруженых изображений
         this.event = {
             start: 'click', // тригер для удаления заглушки и начала работы с канвасом
             begin: 'mousedown', // тригер для beginX
@@ -52,9 +53,11 @@ class RotatingProduct {
             endI: 0, // значение this при событии mouseup
         }; // объект содержащий названия событий и переменные для этих событий
         // изменяем первый элемент массива и загружаем его
-        this.srcData[0] = this.mutation(this.srcData[0]);
+        this.mutation(this.srcData[0]);
         //выводим ее в canvas
-        this.srcData[0].addEventListener('load', () => this.draw(this.srcData[0]));
+        Promise.all(this.promises).then(images => {
+            images.forEach(img => this.draw(img))
+        });
         // если устройство телефон - меняю события на телефонные
         if (this.event.isTouch in document.documentElement) {
             this.event.start = 'touchend'; // тригер для удаления заглушки и начала работы с канвасом
@@ -109,34 +112,27 @@ class RotatingProduct {
     clear() {
         this.ctx.clearRect(this.bx, this.by, this.cvs.width, this.cvs.height);
     };
-    // метод меняющий путь на картинку
-    mutation(el) {
-        let img = new Image(); // создаю картинку
-        if (typeof el === 'string') { //проверяю элементы на строку
-            img.src = el; // добавляю путь к картинке
-            return img; // заменяю строку с путем к картинке в массиве на картинку
-        } else {
-            return el; //если не строка, ничего не делаю
-        }
+    // метод меняющий путь на картинку и загружащий ее
+    mutation(src) {
+        this.promises.push(new Promise((resolve, reject) => { //создаю промис чтобы дождаться загрузку картинки
+            let img = new Image(); //создаю картинку
+            img.onload = () => resolve(img); //добавляю картинку в resolve если все хорошо
+            img.onerror = () => reject(); // иначе ничего не бавляю
+            img.src = src; //изменяю src картинки
+        }))
     };
     // делаю стрелочную ф-цию чтобы не терялся this
     allMutation = () => {
-        //изменяю все элементы
-        this.srcData = this.srcData.map(el => el = this.mutation(el));
-        let count = 0; //количество загруженых
-        this.srcData.forEach(img => {
-            img.onload = () => {
-                count++; //если загружена увеличиваю сыетчик
-                if (count === this.srcData.length - 2) { // -2 потому-что 1ую картинку мы загрузили ранее
-                    this.isRotate = true; //разрешаю вращение
-                    setTimeout(() => {
-                        this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
-                        this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
-                        this.shadow.children[0].style.height = 0; //картинку в месте родительским елементом
-                        this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
-                    }, 1000); // искуственная задержка для анимации
-                }
-            };
+        this.srcData.forEach(src => this.mutation(src));
+        Promise.all(this.promises).then(images => {
+            this.srcData = images; /// дождавшись выполнения всех промисов делаю srcData полностью загруженым
+            this.isRotate = true; //разрешаю вращение
+            setTimeout(() => {
+                this.isRotate && this.shadow.classList.add('shadow-cvs-hidden'); // Добавляю класс который делает элемент прозрачным
+                this.shadow.children[0].classList.remove('rotate-active'); // прикращаю вращать
+                this.shadow.children[0].style.height = 0; //картинку в месте родительским елементом
+                this.shadow.style.height = 0; // схлопываю перекрывающий элемент для возможности работы с канвас
+            }, 1000); // искуственная задержка для анимации
         });
     };
     // метод вращения при помощи перетягивания
@@ -212,5 +208,4 @@ window.addEventListener('DOMContentLoaded', () => {
     10. запретить скрол страницы во время драг - Complete
     11. Разбить allMutation на несколько методов
     12. Добавть размеры для медиазапросов -  рулиться css
-    13. отказался от промисов в пользу колбека, все равно транспилируем в es5
 */
