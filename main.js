@@ -61,9 +61,9 @@ class RotatingProduct {
             this.event.run = 'touchmove'; // тригер для runX
             this.event.end = 'touchend'; // тригер для endI и удаления тригера run
         }
-        // событие начала
+        alert(navigator.userAgent)
+            // событие начала
         this.shadow.addEventListener(this.event.start, () => {
-            alert(navigator.userAgent)
             this.allMutation(); // преобразую строки в картинки
             this.shadow.children[0].classList.add('rotate-active'); // вращаю 360 пока загружаються картинки
         });
