@@ -33,10 +33,10 @@ class RotatingProduct {
         this.srcData = srcData; //массив путей
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
-        this.isRotate = false; //возможность вращения
         this.i = 0; // номер каринки
         this.focus = false; // для правильной работы фокуса в разных событиях
         this.isOver = false; // над чем мы
+        this.isRotate = false; //возможность вращения
         this.promises = []; //пустой массив для сохранения загруженых изображений
         this.event = {
             start: 'click', // тригер для удаления заглушки и начала работы с канвасом
