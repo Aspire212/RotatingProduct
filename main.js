@@ -34,7 +34,7 @@ class RotatingProduct {
         this.bx = 0; // крайняя левая точка канваса
         this.by = 0; // крайняя верхняя точка канваса
         this.isRotate = false; //возможность вращения
-        this.i = 0 // номер каринки
+        this.i = 0; // номер каринки
         this.focus = false; // для правильной работы фокуса в разных событиях
         this.isOver = false; // над чем мы
         this.event = {
@@ -93,7 +93,7 @@ class RotatingProduct {
             this.focus = true; // делаю фокус активным
             this.isOver = true; // на элементе
             this.cvs.classList.add('cvs-active'); // давляю класс показывающий тень, мол элемент в фокусе
-            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel, { passive: false }) //пока элемент в фокусе разрешаю вращение колесом
+            this.cvs.addEventListener(this.event.wheel, this.imageReplacementWheel, { passive: false }); //пока элемент в фокусе разрешаю вращение колесом
             this.cvs.addEventListener(this.event.leave, () => { // когда мышь уходит с канваса
                 this.focus = false; // отключаю фокусн
                 this.isOver = false; // ушли
@@ -103,9 +103,9 @@ class RotatingProduct {
     };
     // метод отрисовки
     draw(img) {
-            this.ctx.drawImage(img, this.bx, this.by, this.cvs.width, this.cvs.height);
-        }
-        //метод очистки холста
+        this.ctx.drawImage(img, this.bx, this.by, this.cvs.width, this.cvs.height);
+    };
+    //метод очистки холста
     clear() {
         this.ctx.clearRect(this.bx, this.by, this.cvs.width, this.cvs.height);
     };
@@ -168,9 +168,9 @@ class RotatingProduct {
             this.event.endI = this.i; // для хранения координат
         }
         if (this.i > 0) {
-            this.draw(this.srcData[this.srcData.length - this.i]) //исходя из условия отрисовываю
+            this.draw(this.srcData[this.srcData.length - this.i]); //исходя из условия отрисовываю
         } else if (this.i <= 0) {
-            this.draw(this.srcData[Math.abs(this.i)]) //исходя из условия отрисовываю
+            this.draw(this.srcData[Math.abs(this.i)]); //исходя из условия отрисовываю
         }
     };
     //метод расчета интервалов
@@ -180,7 +180,6 @@ class RotatingProduct {
         newX += endI; // добавляю предыдущее значение
         int = Math.floor(newX / length); // получаю интервал исходя старое + новое значение / количество картинок в массиве
         newX = newX - (int * length); // нахожу конркретное значение в интервале
-        //console.log('coord:', coord, 'length:', length, 'i:', i, 'newX:', newX)
         return newX;
     };
 }
@@ -213,28 +212,5 @@ window.addEventListener('DOMContentLoaded', () => {
     10. запретить скрол страницы во время драг - Complete
     11. Разбить allMutation на несколько методов
     12. Добавть размеры для медиазапросов -  рулиться css
-    13. подумать над переключателями оver
-    14. переделать forEach на every и убрать counter
-*/
-
-/*
-let arr = ['im1.jpg', 'im2.png'];
-let promises = [];
-
-arr.forEach(path => getImage(path))
-
-Promise.all(promises)
-  .then(images => {
-    images.forEach(img => console.log(img))
-  })
-
-function getImage(src) {
-  promises.push(new Promise((resolve, reject) => {
-    let img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject();
-    img.src = src;
-    })
-  )
-}
+    13. отказался от промисов в пользу колбека, все равно транспилируем в es5
 */
